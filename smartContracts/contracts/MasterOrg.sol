@@ -33,12 +33,14 @@ contract MasterOrg {
 
     function addOrg(
         string calldata orgName,
-        OrgSettings calldata settings
-    ) public onlyOwner {
-        Org neworg = new Org(msg.sender, orgName, settings);
+        OrgSettings calldata settings,
+        address newOrgOwner
+    ) public onlyOwner returns (address) {
+        Org neworg = new Org(newOrgOwner, orgName, settings);
         address newOrgAddress = address(neworg); // return the address of the neworg
         orgAddresses[newOrgAddress] = 1; // store the address into an arrays
         emit OrgAdded(msg.sender, newOrgAddress, orgName);
+        return newOrgAddress;
     }
 
     /**

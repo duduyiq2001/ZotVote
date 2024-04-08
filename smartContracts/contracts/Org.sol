@@ -441,7 +441,7 @@ contract Org {
                     // remove proposal
                     removeBinaryProposal(proposalId);
                     //emit event
-                    emit proposalReached(proposalId, 1);
+                    emit proposalReached(proposalId, 0);
                     return;
                 }
                 // if full vote and majority still not reached
@@ -457,10 +457,72 @@ contract Org {
                     // remove proposal
                     removeBinaryProposal(proposalId);
                     //emit event
-                    emit proposalReached(proposalId, 0);
+                    emit proposalReached(proposalId, 1);
                     return;
                 }
             }
         }
+    }
+
+    /**
+     * public view functions
+     */
+
+    function getMember() public view returns (address[] memory) {
+        return members;
+    }
+
+    function getBallots() public view returns (Ballot[] memory) {
+        // create ballot array
+        Ballot[] memory bArray = new Ballot[](ballots.length);
+        for (uint i = 0; i < ballots.length; i++) {
+            bArray[i] = ballotsid[ballots[i]];
+        }
+        return bArray;
+    }
+
+    function getBallotsId() public view returns (uint[] memory) {
+        return ballots;
+    }
+
+    function getBinaryBallots() public view returns (BinaryBallot[] memory) {
+        // create ballot array
+        BinaryBallot[] memory bArray = new BinaryBallot[](binaryBallots.length);
+        for (uint i = 0; i < binaryBallots.length; i++) {
+            bArray[i] = binaryBallotsid[ballots[i]];
+        }
+        return bArray;
+    }
+
+    function getBinaryBallotsId() public view returns (uint[] memory) {
+        return binaryBallots;
+    }
+
+    /**
+     * @param proposalId id of proposal
+     */
+    function getTally(uint proposalId) public view returns (uint[] memory) {
+        uint[] memory info = new uint[](ballotsid[proposalId].options.length);
+        for (uint i = 0; i < ballotsid[proposalId].options.length; i++) {
+            info[i] = tally[proposalId][i];
+        }
+        return info;
+    }
+
+    /**
+     * @param proposalId id of proposal
+     */
+    function getBinaryTally(
+        uint proposalId
+    ) public view returns (uint[] memory) {
+        uint[] memory info = new uint[](2);
+        for (uint i = 0; i < 2; i++) {
+            info[i] = tally[proposalId][i];
+        }
+        return info;
+    }
+
+    function getResults() public view returns (Result[] memory) {
+        return results;
     }
 }
